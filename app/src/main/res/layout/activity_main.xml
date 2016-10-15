@@ -1,34 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_rel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="4">
+    android:weightSum="4.0" >
 
-    <View
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1.0"
+        android:background="@color/colorPrimaryDark" >
+    </RelativeLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@color/com_facebook_blue"
-        android:backgroundTint="@color/com_facebook_blue" />
-
-    <View
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1.0"
+        android:background="@color/com_facebook_blue" >
 
-    <View
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/facebook"
+            android:id="@+id/textView"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="25sp"
+            style="@style/com_facebook_button"
+            android:layout_above="@+id/login_button"
+            android:layout_centerHorizontal="true" />
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="bottom" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1.0"
+        android:background="@android:color/holo_blue_bright" >
+    </RelativeLayout>
 
-
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.0"
+        android:background="@color/colorPrimary" >
+    </RelativeLayout>
 
 </LinearLayout>

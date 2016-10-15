@@ -15,5 +15,7 @@ public class MainActivity extends FragmentActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_main);
+
+
     }
 }
