@@ -24,6 +24,7 @@ public class Beamer extends Activity
         implements OnNdefPushCompleteCallback {
     NfcAdapter mNfcAdapter;
     TextView textView;
+    Activity parent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,19 +35,12 @@ public class Beamer extends Activity
             finish();
             return;
         }
-        // Register callback
-        mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
-    }
 
-    public void SendMessage(String text) {
-        NdefMessage msg = createMessage(text);
-        mNfcAdapter.setNdefPushMessage(msg, this);
+        mNfcAdapter.setOnNdefPushCompleteCallback(this,this);
     }
 
     public NdefMessage createMessage(String text)
     {
-        //string text = ("Beam me up, Android!\n\n" +
-        //        "Beam Time: " + System.currentTimeMillis());
         NdefMessage msg = new NdefMessage(
                 new NdefRecord[] { NdefRecord.createMime(
                         "application/com.aama.melon", text.getBytes())
@@ -59,7 +53,7 @@ public class Beamer extends Activity
     public void onNdefPushComplete(NfcEvent event)
     {
         Log.e("Sending ","Sent !!!");
-        mNfcAdapter.setNdefPushMessage(null,this);
+        mNfcAdapter.setNdefPushMessage(null,parent);
     }
 
     @Override
@@ -89,4 +83,3 @@ public class Beamer extends Activity
     }
 
 }
-

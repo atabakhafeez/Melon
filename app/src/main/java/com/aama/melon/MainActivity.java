@@ -14,6 +14,14 @@ public class MainActivity extends AppCompatActivity {
     Beamer beamer;
     NfcAdapter nfcAdapter;
 
+    public void SendNfc(View v)
+    {
+        String text = ((EditText) findViewById(R.id.editText)) . getText() .toString();
+        ((TextView) findViewById(R.id.Text1)) . setText("AAA");
+        NdefMessage msg = beamer.createMessage(text);
+        nfcAdapter.setNdefPushMessage(msg,this);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -28,13 +36,11 @@ public class MainActivity extends AppCompatActivity {
         beamer.processIntent(intent);
     }
 
-    public void SendNfc(View v)
+    public void cancel()
     {
-        String text = ((EditText) findViewById(R.id.editText)) . getText() .toString();
-        ((TextView) findViewById(R.id.Text1)) . setText("AAA");
-        NdefMessage msg = beamer.createMessage(text);
-        nfcAdapter.setNdefPushMessage(msg, this);
+        nfcAdapter.setNdefPushMessage(null,this);
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         beamer = new Beamer();
-        beamer.textView = (TextView) findViewById(R.id.Text1);
+        beamer.parent = this;
+        nfcAdapter.setOnNdefPushCompleteCallback(beamer,this);
     }
 }
