@@ -65,7 +65,14 @@
             android:layout_below="@+id/textView"
             android:layout_centerHorizontal="true" />
 
-
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Connect Twitter"
+            android:id="@+id/twitter_switch"
+            android:layout_alignBottom="@+id/twitter_login_button"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"/>
 
 
     </RelativeLayout>
