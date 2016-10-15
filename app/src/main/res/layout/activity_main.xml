@@ -24,15 +24,14 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/facebook"
-            android:id="@+id/textView"
             android:gravity="center_vertical|center_horizontal"
             android:textSize="25sp"
             style="@style/com_facebook_button"
-            android:layout_above="@+id/login_button"
+            android:layout_above="@+id/fb_login_button"
             android:layout_centerHorizontal="true" />
 
         <com.facebook.login.widget.LoginButton
-            android:id="@+id/login_button"
+            android:id="@+id/fb_login_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -46,6 +45,27 @@
         android:layout_height="match_parent"
         android:layout_weight="1.0"
         android:background="@android:color/holo_blue_bright" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/twitter"
+            android:id="@+id/textView"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="25sp"
+            android:backgroundTint="@color/com_facebook_button_send_background_color"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            style="@style/Base.Widget.AppCompat.Button" />
+
+        <com.twitter.sdk.android.core.identity.TwitterLoginButton
+            android:id="@+id/twitter_login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView"
+            android:layout_centerHorizontal="true" />
+
+
     </RelativeLayout>
 
     <RelativeLayout
