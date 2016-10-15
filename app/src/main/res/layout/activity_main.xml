@@ -10,7 +10,27 @@
     tools:context="com.aama.melon.MainActivity">
 
     <TextView
+        android:id="@+id/Text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!" />
+
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:onClick="SendNfc"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:layout_below="@+id/Text1"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
