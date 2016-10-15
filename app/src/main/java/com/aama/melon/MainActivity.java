@@ -1,11 +1,14 @@
 package com.aama.melon;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
@@ -41,42 +44,17 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
 
         loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
+        SharedPreferences sharedPrefLogin = getSharedPreferences(LOGIN_PREFS, Context.MODE_PRIVATE);
+        twitter_logged_in = false;
+        boolean twitter_logged_in = sharedPrefLogin.getBoolean(TWITTER, false);
 
-        loginButton.setCallback(new Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> result) {
-                // The TwitterSession is also available through:
-                // Twitter.getInstance().core.getSessionManager().getActiveSession()
-                TwitterSession session = result.data;
-                // TODO: Remove toast and use the TwitterSession's userID
-                // with your app's user model
-                String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-
-                SharedPreferences settings = getSharedPreferences(LOGIN_PREFS, 0);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putBoolean(TWITTER, true);
-            }
-            @Override
-            public void failure(TwitterException exception) {
-                Log.d("TwitterKit", "Login with Twitter failure", exception);
-            }
-        });
-
-//        twitterLogin();
-//        SharedPreferences sharedPrefLogin = getSharedPreferences(LOGIN_PREFS,
-//                Context.MODE_PRIVATE);
-//        twitter_logged_in = false;
-//        boolean twitter_logged_in = sharedPrefLogin.getBoolean(TWITTER, false);
-//        loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
-//
-//        if (twitter_logged_in) {
-//            twitterLogin();
-//        } else {
-//            loginButton.setVisibility(View.GONE);
-//            Switch twitter_switch = (Switch) findViewById(R.id.twitter_switch);
-//            twitter_switch.setVisibility(View.VISIBLE);
-//        }
+        if (twitter_logged_in) {
+            twitterLogin();
+        } else {
+            loginButton.setVisibility(View.GONE);
+            ToggleButton twitter_switch = (ToggleButton) findViewById(R.id.twitterToggle);
+            twitter_switch.setVisibility(View.VISIBLE);
+        }
 
     }
 
