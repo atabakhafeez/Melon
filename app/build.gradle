@@ -17,10 +17,9 @@ repositories {
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-
     defaultConfig {
         applicationId "com.aama.melon"
-        minSdkVersion 15
+        minSdkVersion 22
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -31,6 +30,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
 }
 apply plugin: 'com.android.application'
 
@@ -38,15 +39,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-    compile ('com.twitter.sdk.android:twitter:1.6.0@aar'){
+    compile('com.twitter.sdk.android:twitter:1.6.0@aar') {
         transitive = true;
     }
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }
-
 }
