@@ -6,9 +6,19 @@ import android.nfc.NfcAdapter;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,12 +26,28 @@ public class MainActivity extends AppCompatActivity {
     NfcAdapter nfcAdapter;
     TextView textView;
 
-    public void SendNfc(View v)
+    User current;
+
+    public void SendString(String s)
+    {
+        Log.d("Send: ", "Attempting to Send ");
+
+        NdefMessage msg = beamer.createMessage(s);
+        nfcAdapter.setNdefPushMessage(msg,this);
+    }
+
+    public void ButtonNfc(View v)
     {
         String text = ((EditText) findViewById(R.id.editText)) . getText() .toString();
-        ((TextView) findViewById(R.id.Text1)) . setText("AAA");
-        NdefMessage msg = beamer.createMessage(text);
-        nfcAdapter.setNdefPushMessage(msg,this);
+
+        SendString(text);
+    }
+
+    public void SendUser(View v)
+    {
+        String text = current.toJSON();
+
+        SendString(text);
     }
 
     void processIntent(Intent intent) {
@@ -30,7 +56,16 @@ public class MainActivity extends AppCompatActivity {
         // only one message sent during the beam
         NdefMessage msg = (NdefMessage) rawMsgs[0];
         // record 0 contains the MIME type, record 1 is the AAR, if present
-        textView.setText(new String(msg.getRecords()[0].getPayload()));
+
+        String text = new String(msg.getRecords()[0].getPayload());
+
+        ProcessReceived(text);
+    }
+
+    public void ProcessReceived(String s)
+    {
+        User r = current.fromJSON(s);
+        Toast.makeText(this,r.getFb(),Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -52,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         nfcAdapter.setNdefPushMessage(null,this,this);
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,5 +98,8 @@ public class MainActivity extends AppCompatActivity {
         beamer = new Beamer();
         beamer.parent = this;
         nfcAdapter.setOnNdefPushCompleteCallback(beamer,this);
+
+        current = new User();
+        current.setFb("tester");
     }
 }
