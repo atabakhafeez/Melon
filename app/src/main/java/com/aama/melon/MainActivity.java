@@ -4,17 +4,43 @@ import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.Parcelable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import com.crashlytics.android.Crashlytics;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
+import io.fabric.sdk.android.Fabric;
+
+
+public class MainActivity extends FragmentActivity {
 
     Beamer beamer;
     NfcAdapter nfcAdapter;
     TextView textView;
+
+    private TwitterLoginButton loginButton;
+    private boolean twitter_logged_in;
+    public static final String LOGIN_PREFS = "LoginPrefs";
+    public static final String TWITTER = "TwitterLoggedIn";
+    public static final String TWITTER_KEY = "YvuU7TFgDRfLXgqixW3RDTYht";
+    public static final String TWITTER_SECRET = "ExODI9VwYzSQ4scaIztjZRqGXM9goyOpISW48L7T0VxIlChdLr";
+
+    private String username;
+    private Long id;
+    TwitterSession twitterSession = null;
 
     public void SendNfc(View v)
     {
@@ -56,8 +82,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_main);
 
+        // twitter auth
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new TwitterCore(authConfig));
+
+        // NFC
         textView = (TextView) findViewById(R.id.Text1);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
