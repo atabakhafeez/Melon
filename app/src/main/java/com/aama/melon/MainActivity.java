@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ToggleButton;
+import android.widget.Toast;
 //import com.facebook.login.widget.LoginButton;
 
 import com.crashlytics.android.Crashlytics;
@@ -39,7 +41,7 @@ public class MainActivity extends FragmentActivity {
     NfcAdapter nfcAdapter;
     TextView textView;
 
-    private TwitterLoginButton loginButton;
+    private TwitterLoginButton tw_loginButton;
     private boolean twitter_logged_in;
     public static final String LOGIN_PREFS = "LoginPrefs";
     public static final String TWITTER = "TwitterLoggedIn";
@@ -126,6 +128,19 @@ public class MainActivity extends FragmentActivity {
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new TwitterCore(authConfig));
 
+        tw_loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
+//        SharedPreferences sharedPrefLogin = getSharedPreferences(LOGIN_PREFS, Context.MODE_PRIVATE);
+//        twitter_logged_in = false;
+//        twitter_logged_in = sharedPrefLogin.getBoolean(TWITTER, false);
+
+        if (twitterSession == null) {
+            twitterLogin();
+        } else {
+            loginButton.setVisibility(View.GONE);
+            ToggleButton twitter_switch = (ToggleButton) findViewById(R.id.twitterToggle);
+            twitter_switch.setVisibility(View.VISIBLE);
+        }
+
         // NFC
         textView = (TextView) findViewById(R.id.Text1);
 
@@ -133,5 +148,29 @@ public class MainActivity extends FragmentActivity {
         beamer = new Beamer();
         beamer.parent = this;
         nfcAdapter.setOnNdefPushCompleteCallback(beamer,this);
+    }
+
+    private void twitterLogin() {
+        tw_loginButton.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                twitterSession = result.data;
+                username = twitterSession.getUserName();
+                id = twitterSession.getUserId();
+                String msg = "@" + twitterSession.getUserName() + " logged in! (#" +
+                        twitterSession.getUserId() + ")";
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                tw_loginButton.setVisibility(View.GONE);
+                ToggleButton twitter_switch = (ToggleButton) findViewById(R.id.twitterToggle);
+                twitter_switch.setVisibility(View.VISIBLE);
+//                SharedPreferences settings = getSharedPreferences(LOGIN_PREFS, 0);
+//                SharedPreferences.Editor editor = settings.edit();
+//                editor.putBoolean(TWITTER, true);
+            }
+            @Override
+            public void failure(TwitterException exception) {
+                Log.d("TwitterKit", "Login with Twitter failure", exception);
+            }
+        });
     }
 }
