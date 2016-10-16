@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+//import com.facebook.login.widget.LoginButton;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -94,7 +95,9 @@ public class MainActivity extends FragmentActivity {
 
         callbackManager = CallbackManager.Factory.create();
 
-        LoginManager.getInstance().registerCallback(callbackManager,
+        com.facebook.login.widget.LoginButton loginButton = (com.facebook.login.widget.LoginButton) findViewById(R.id.fb_login_button);
+
+        loginButton.registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
