@@ -3,32 +3,25 @@ package com.aama.melon;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.ToggleButton;
-import android.widget.Toast;
 //import com.facebook.login.widget.LoginButton;
 
-import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.FacebookException;
-import com.facebook.CallbackManager;
-import com.facebook.login.LoginResult;
 import com.facebook.login.LoginManager;
-import com.facebook.FacebookCallback;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
+import com.facebook.login.LoginResult;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
-import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
@@ -41,7 +34,7 @@ public class MainActivity extends FragmentActivity {
     NfcAdapter nfcAdapter;
     TextView textView;
 
-    private TwitterLoginButton tw_loginButton;
+    private TwitterLoginButton loginButton;
     private boolean twitter_logged_in;
     public static final String LOGIN_PREFS = "LoginPrefs";
     public static final String TWITTER = "TwitterLoggedIn";
@@ -108,8 +101,10 @@ public class MainActivity extends FragmentActivity {
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
+                        TextView textView = (TextView) findViewById(R.id.editText);
+
                         accessToken = loginResult.getAccessToken();
-                        ((TextView) findViewById(R.id.Text1)) . setText("Received user ID");
+                        textView.setText(accessToken.getUserId().toString());
                         Log.d(FB_LOG_TAG, "Successful sigin");
                     }
 
@@ -128,19 +123,6 @@ public class MainActivity extends FragmentActivity {
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new TwitterCore(authConfig));
 
-        tw_loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
-//        SharedPreferences sharedPrefLogin = getSharedPreferences(LOGIN_PREFS, Context.MODE_PRIVATE);
-//        twitter_logged_in = false;
-//        twitter_logged_in = sharedPrefLogin.getBoolean(TWITTER, false);
-
-        if (twitterSession == null) {
-            twitterLogin();
-        } else {
-            loginButton.setVisibility(View.GONE);
-            ToggleButton twitter_switch = (ToggleButton) findViewById(R.id.twitterToggle);
-            twitter_switch.setVisibility(View.VISIBLE);
-        }
-
         // NFC
         textView = (TextView) findViewById(R.id.Text1);
 
@@ -150,27 +132,9 @@ public class MainActivity extends FragmentActivity {
         nfcAdapter.setOnNdefPushCompleteCallback(beamer,this);
     }
 
-    private void twitterLogin() {
-        tw_loginButton.setCallback(new Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> result) {
-                twitterSession = result.data;
-                username = twitterSession.getUserName();
-                id = twitterSession.getUserId();
-                String msg = "@" + twitterSession.getUserName() + " logged in! (#" +
-                        twitterSession.getUserId() + ")";
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-                tw_loginButton.setVisibility(View.GONE);
-                ToggleButton twitter_switch = (ToggleButton) findViewById(R.id.twitterToggle);
-                twitter_switch.setVisibility(View.VISIBLE);
-//                SharedPreferences settings = getSharedPreferences(LOGIN_PREFS, 0);
-//                SharedPreferences.Editor editor = settings.edit();
-//                editor.putBoolean(TWITTER, true);
-            }
-            @Override
-            public void failure(TwitterException exception) {
-                Log.d("TwitterKit", "Login with Twitter failure", exception);
-            }
-        });
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
