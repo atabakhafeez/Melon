@@ -3,29 +3,24 @@ package com.aama.melon;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.FacebookException;
-import com.facebook.CallbackManager;
-import com.facebook.login.LoginResult;
 import com.facebook.login.LoginManager;
-import com.facebook.FacebookCallback;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
+import com.facebook.login.LoginResult;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
-import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
@@ -103,7 +98,10 @@ public class MainActivity extends FragmentActivity {
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
+                        TextView textView = (TextView) findViewById(R.id.editText);
+
                         accessToken = loginResult.getAccessToken();
+                        textView.setText(accessToken.getUserId().toString());
                         Log.d(FB_LOG_TAG, "Successful sigin");
                     }
 
@@ -129,5 +127,11 @@ public class MainActivity extends FragmentActivity {
         beamer = new Beamer();
         beamer.parent = this;
         nfcAdapter.setOnNdefPushCompleteCallback(beamer,this);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
